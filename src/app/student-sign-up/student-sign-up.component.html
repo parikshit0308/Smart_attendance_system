@@ -1,0 +1,119 @@
+<div class="sign-in-container">
+  <h1>Student Sign-Up</h1>
+
+  <!-- Form start -->
+  <form (ngSubmit)="onSubmit()" #signInForm="ngForm">
+    <!-- Student Name -->
+    <div class="form-group">
+      <label for="studentName">Name</label>
+      <input type="text" id="studentName" name="studentName" ngModel required placeholder="Enter your full name" />
+    </div>
+
+    <!-- Student Email -->
+    <div class="form-group">
+      <label for="studentEmail">Email</label>
+      <input
+        type="email"
+        id="studentEmail"
+        name="studentEmail"
+        ngModel
+        required
+        email
+        placeholder="Enter your email address"
+        #email="ngModel"
+      />
+      <div *ngIf="email.invalid && email.touched" class="error-message">
+        <p *ngIf="email.errors?.['required']">Email is required.</p>
+        <p *ngIf="email.errors?.['email']">Please enter a valid email.</p>
+      </div>
+    </div>
+
+    <!-- Student Phone -->
+    <div class="form-group">
+      <label for="studentPhone">Phone Number</label>
+      <input
+        type="tel"
+        id="studentPhone"
+        name="studentPhone"
+        ngModel
+        required
+        pattern="^\d{10}$"
+        placeholder="Enter your phone number"
+        #phone="ngModel"
+      />
+      <div *ngIf="phone.invalid && phone.touched" class="error-message">
+        <p *ngIf="phone.errors?.['required']">Phone number is required.</p>
+        <p *ngIf="phone.errors?.['pattern']">Please enter a valid 10-digit phone number.</p>
+      </div>
+    </div>
+
+    <!-- Student Roll Number -->
+    <div class="form-group">
+      <label for="studentRollNo">Roll Number</label>
+      <input type="text" id="studentRollNo" name="studentRollNo" ngModel required placeholder="Enter your roll number" />
+    </div>
+
+    <!-- Student Class -->
+    <div class="form-group">
+      <label for="studentClass">Class</label>
+      <select id="studentClass" name="studentClass" ngModel required>
+        <option value="FE">F.E</option>
+        <option value="SE">S.E</option>
+        <option value="TE">T.E</option>
+        <option value="BE">B.E</option>
+      </select>
+    </div>
+
+    <!-- Department -->
+    <div class="form-group">
+      <label for="studentDepartment">Department</label>
+      <input type="text" id="studentDepartment" name="studentDepartment" ngModel required placeholder="Enter your department" />
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="studentPassword">Password</label>
+      <input
+        type="password"
+        id="studentPassword"
+        name="studentPassword"
+        ngModel
+        required
+        minlength="8"
+        placeholder="Create a password"
+        #password="ngModel"
+      />
+      <div *ngIf="password.invalid && password.touched" class="error-message">
+        <p *ngIf="password.errors?.['required']">Password is required.</p>
+        <p *ngIf="password.errors?.['minlength']">Password must be at least 8 characters long.</p>
+      </div>
+    </div>
+
+    <!-- File upload for photos -->
+    <div class="upload-container">
+      <input type="file" id="fileInput" (change)="handleFileInput($event)" required multiple />
+      <label for="fileInput">Upload up to 3 Photos</label>
+    </div>
+
+    <!-- Display uploaded images -->
+    <div *ngIf="uploadedImages.length > 0" class="uploaded-image-container">
+      <h3>Uploaded Images:</h3>
+      <div *ngFor="let image of uploadedImages; let i = index">
+        <img [src]="image" alt="Uploaded Image {{i + 1}}" class="uploaded-image" />
+      </div>
+    </div>
+
+    <!-- Success message after image upload -->
+    <div *ngIf="uploadedImages.length > 0" class="success-message">
+      <p>Your photos have been uploaded successfully!</p>
+    </div>
+
+    <!-- Submit Button -->
+    <button (click)="showCamera()" type="submit" [disabled]="!signInForm.valid || uploadedImages.length === 0">Sign Up</button>
+  </form>
+
+  <!-- "Already have an account?" link -->
+  <div class="account-link">
+    <p (click)="showSignIn()">Already have an account?Sign In</p>
+  </div>
+</div>

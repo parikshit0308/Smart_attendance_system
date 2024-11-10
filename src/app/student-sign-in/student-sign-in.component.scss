@@ -1,0 +1,110 @@
+/* Overall container styling */
+.sign-in-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background-color: #f8f9fa;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Heading style */
+  h1 {
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #343a40;
+    font-size: 32px;
+    margin-bottom: 30px;
+  }
+  
+  /* Form field styling */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: #495057;
+    margin-bottom: 8px;
+  }
+  
+  /* Input fields styling */
+  input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    color: #495057;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(38, 143, 255, 0.5);
+  }
+  
+  /* Error message styling */
+  .error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  /* Button styling */
+  button {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 20px;
+  }
+  
+  button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  button:disabled:hover {
+    background-color: #ccc;
+    transform: none;
+  }
+  
+  /* Account Link (Sign up / Forgot Password) */
+  .account-link {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #495057;
+  }
+  
+  .account-link p {
+    color: #007bff;
+    cursor: pointer;
+    font-weight: 600;
+    margin: 0;
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+  }
+  
+  .account-link p:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+  
