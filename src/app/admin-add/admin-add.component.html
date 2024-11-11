@@ -1,0 +1,113 @@
+<div class="add-student-container">
+    <h2>Add Student</h2>
+  
+    <!-- Add Student Form -->
+    <form (submit)="addStudent()" #addStudentForm="ngForm">
+      <div class="form-group">
+        <label for="studentName">Student Name</label>
+        <input
+          type="text"
+          id="studentName"
+          name="studentName"
+          [(ngModel)]="newStudent.studentName"
+          required
+          class="form-control"
+          placeholder="Enter student name"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="studentEmail">Student Email</label>
+        <input
+          type="email"
+          id="studentEmail"
+          name="studentEmail"
+          [(ngModel)]="newStudent.studentEmail"
+          required
+          class="form-control"
+          placeholder="Enter student email"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="studentDepartment">Student Department</label>
+        <input
+          type="text"
+          id="studentDepartment"
+          name="studentDepartment"
+          [(ngModel)]="newStudent.studentDepartment"
+          required
+          class="form-control"
+          placeholder="Enter student department"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="studentClass">Student Class</label>
+        <input
+          type="text"
+          id="studentClass"
+          name="studentClass"
+          [(ngModel)]="newStudent.studentClass"
+          required
+          class="form-control"
+          placeholder="Enter student class"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="studentPhone">Student Phone</label>
+        <input
+          type="tel"
+          id="studentPhone"
+          name="studentPhone"
+          [(ngModel)]="newStudent.studentPhone"
+          required
+          class="form-control"
+          placeholder="Enter student phone number"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="studentRollNo">Student Roll No</label>
+        <input
+          type="text"
+          id="studentRollNo"
+          name="studentRollNo"
+          [(ngModel)]="newStudent.studentRollNo"
+          required
+          class="form-control"
+          placeholder="Enter student roll number"
+        />
+      </div>
+  
+      <!-- Photo Upload Section -->
+      <div class="form-group">
+        <label for="studentPhotos">Upload Photos (Max 3)</label>
+        <input
+          type="file"
+          id="studentPhotos"
+          name="studentPhotos"
+          (change)="onFilesSelected($event)"
+          class="form-control"
+          accept="image/*"
+          multiple
+        />
+        <div *ngIf="newStudent.photoUrls.length > 0" class="image-preview">
+          <h4>Preview:</h4>
+          <div class="image-previews">
+            <img *ngFor="let photo of newStudent.photoUrls" [src]="photo" alt="Student Photo" class="preview-image" />
+          </div>
+        </div>
+        <div *ngIf="newStudent.photoUrls.length === 3" class="max-photos-message">
+          <p>You can only upload up to 3 photos.</p>
+        </div>
+      </div>
+  
+      <!-- Submit Button -->
+      <button type="submit" class="submit-btn" [disabled]="newStudent.photoUrls.length === 0 || newStudent.photoUrls.length > 3">
+        Add Student
+      </button>
+    </form>
+  </div>
+  

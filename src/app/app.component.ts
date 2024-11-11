@@ -55,7 +55,16 @@ export class AppComponent {
       this.adminList = true;
       this.adminView = false;
       this.adminAdd = false;
-      this.adminSignUp = false
+      this.adminSignUp = false;
+      this.adminSignin = false;
+    }
+
+    if(event == "showAdd"){
+      this.adminAdd = true;
+      this.adminView = false;
+      this.adminList = false;
+      this.adminSignUp = false;
+      this.adminSignin = false;
     }
   }
 }

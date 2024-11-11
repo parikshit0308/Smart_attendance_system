@@ -21,7 +21,6 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit(): void {
-
     const storedStudentInfo = sessionStorage.getItem('studentInfo');
     console.log('Stored student info from sessionStorage:', storedStudentInfo);
 
@@ -145,4 +144,8 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
 
     return false; // If canvas context is not available, return false
   }
+  // clearSessionStorage(): void {
+  //   sessionStorage.clear();
+  //   console.log('All items have been removed from sessionStorage.');
+  // }  
 }

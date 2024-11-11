@@ -1,7 +1,7 @@
 <app-student-sign-up *ngIf="signUp" (NextBtnClick) = "NextBtnClick($event)"></app-student-sign-up>
 <app-student-sign-in *ngIf="signIn" (NextBtnClick) = "NextBtnClick($event)"></app-student-sign-in>
 <app-admin-list *ngIf="adminList" (NextBtnClick) = "NextBtnClick($event)"></app-admin-list>
-<app-admin-add *ngIf="adminAdd"></app-admin-add>
+<app-admin-add *ngIf="adminAdd" (NextBtnClick) = "NextBtnClick($event)"></app-admin-add>
 <app-admin-view *ngIf="adminView"></app-admin-view>
 <app-student-camera *ngIf="camera" (NextBtnClick) = "NextBtnClick($event)"></app-student-camera>
 <app-admin-sign-up *ngIf="adminSignUp" (NextBtnClick) = "NextBtnClick($event)"></app-admin-sign-up>

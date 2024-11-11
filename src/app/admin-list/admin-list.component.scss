@@ -1,0 +1,187 @@
+/* Container Styling */
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
+/* Title */
+.admin-container h2 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Action Buttons */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.add-button,
+.edit-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-button {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.2);
+}
+
+.add-button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
+
+.edit-button {
+    background-color: #ffc107;
+    color: #333;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(255, 193, 7, 0.2);
+}
+
+.edit-button:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
+}
+
+/* Table Styling */
+.student-table {
+    width: 100%;
+    overflow: hidden; /* Prevent horizontal scrollbar */
+    margin-top: 20px;
+    table-layout: fixed; /* Fix table layout to avoid overflow issues */
+}
+
+.student-table table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.student-table th,
+.student-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 1rem;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.student-table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.student-table tr:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.01);
+    transition: transform 0.3s ease;
+}
+
+.student-table td {
+    background-color: #f9f9f9;
+}
+
+.student-table td:hover {
+    background-color: #f0f0f0;
+}
+
+/* Hoverable Row */
+.student-table tr {
+    cursor: pointer;
+}
+
+/* Table Headers */
+th {
+    text-align: center;
+    padding: 15px 10px;
+}
+
+/* General Table Styling */
+.student-table tbody {
+    background-color: #ffffff;
+}
+
+/* Empty State */
+.no-data {
+    text-align: center;
+    font-size: 1.2em;
+    color: #888;
+    padding: 20px;
+}
+
+/* Hoverable Row */
+.student-table tr {
+    cursor: pointer;
+}
+
+/* Table Headers */
+th {
+    text-align: center;
+    padding: 15px 10px;
+}
+
+/* General Table Styling */
+.student-table tbody {
+    background-color: #ffffff;
+}
+
+/* Transitions and Animations */
+.student-table th,
+.student-table td {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.student-table tr:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease;
+}
+
+/* Input/Select Fields */
+select,
+input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    width: auto;
+    margin-top: 10px;
+}
+
+select:hover,
+input:hover {
+    border-color: #007bff;
+}
+
+select:focus,
+input:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 86, 179, 0.2);
+}

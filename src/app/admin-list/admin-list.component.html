@@ -1,1 +1,39 @@
-lfjnrelgglreg
+<div class="admin-container">
+    <h2>Student Information</h2>
+
+    <!-- Add Student Button -->
+    <div class="actions">
+        <button class="add-button" (click)="showAdd()">Add Student</button>
+    </div>
+
+    <div *ngIf="studentInfo; else noData" class="student-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Roll No</th>
+                    <th>Department</th>
+                    <th>Class</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ studentInfo.studentName }}</td>
+                    <td>{{ studentInfo.studentRollNo }}</td>
+                    <td>{{ studentInfo.studentDepartment }}</td>
+                    <td>{{ studentInfo.studentClass }}</td>
+                    <td>{{ studentInfo.studentEmail }}</td>
+                    <td>{{ studentInfo.studentPhone }}</td>
+                    <td><button class="edit-button" (click)="editStudent(studentInfo)">Edit</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <ng-template #noData>
+        <p>No student data available.</p>
+    </ng-template>
+</div>
