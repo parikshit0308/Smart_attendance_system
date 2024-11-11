@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 export class StudentSignInComponent implements OnInit {
 
   signInForm!: FormGroup;
-
   @Output() NextBtnClick = new EventEmitter<string>();
 
   constructor(private fb: FormBuilder, private router: Router) {}
@@ -22,7 +21,6 @@ export class StudentSignInComponent implements OnInit {
     });
   }
 
-  // Sign-in logic
   onSignIn(): void {
     if (this.signInForm.invalid) {
       alert('Please fill out the form correctly.');
@@ -34,9 +32,10 @@ export class StudentSignInComponent implements OnInit {
     
     if (storedStudentInfo) {
       const studentInfo = JSON.parse(storedStudentInfo);
-      if (studentEmail === studentInfo.email && studentPassword === studentInfo.password) {
+      // Ensure the correct keys for student email and password
+      if (studentEmail === studentInfo.studentEmail && studentPassword === studentInfo.studentPassword) {
         alert('Successfully logged in!');
-        this.router.navigate(['/dashboard']);
+        this.showCamera();
       } else {
         alert('Invalid email or password!');
       }
@@ -45,17 +44,11 @@ export class StudentSignInComponent implements OnInit {
     }
   }
 
-  // Navigate to Sign-Up page
   onSignUp(): void {
     this.NextBtnClick.emit("ShowSignUp");
   }
 
   showCamera(): void {
     this.NextBtnClick.emit("ShowCamera");
-  }
-
-  // Optional: Add logic for Forgot Password
-  onForgotPassword(): void {
-    alert('Forgot Password logic will go here');
   }
 }

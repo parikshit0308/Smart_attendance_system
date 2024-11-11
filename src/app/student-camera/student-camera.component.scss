@@ -1,0 +1,175 @@
+/* General Layout */
+.camera-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Student Info Section */
+  .student-info {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+  }
+  
+  .student-info h3 {
+    text-align: center;
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  
+  .info-row div {
+    font-size: 18px;
+    color: #555;
+    width: 45%;
+  }
+  
+  strong {
+    color: #000000;
+    font-weight: bold;
+  }
+  
+  /* Session Selector */
+  .session-selector {
+    margin-bottom: 30px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .session-selector label {
+    font-size: 18px;
+    margin-right: 12px;
+    color: #333;
+  }
+  
+  .session-selector select {
+    font-size: 16px;
+    padding: 8px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 300px;
+    margin-top: 10px;
+    display: inline-block;
+    transition: all 0.3s ease;
+  }
+  
+  .session-selector select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Camera Controls */
+  .camera-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .camera-controls video {
+    border-radius: 8px;
+    border: 3px solid #ddd;
+    margin-bottom: 20px;
+    max-width: 100%;
+    height: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .camera-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .camera-buttons button {
+    background-color: #007bff;
+    color: white;
+    font-size: 18px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .camera-buttons button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  .camera-buttons button:active {
+    background-color: #003d7a;
+    transform: scale(1);
+  }
+  
+  /* Captured Image */
+  .captured-image {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  .captured-image h4 {
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+  
+  .captured-image img {
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .camera-container {
+      padding: 15px;
+    }
+  
+    .info-row {
+      flex-direction: column;
+    }
+  
+    .info-row div {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    .camera-controls video {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+    }
+  
+    .camera-buttons {
+      flex-direction: column;
+    }
+  
+    .camera-buttons button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+  

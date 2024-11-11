@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-student-camera',
@@ -7,14 +7,34 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 })
 export class StudentCameraComponent implements OnInit, OnDestroy {
 
-  videoElement: HTMLVideoElement | null = null;
+  @ViewChild('videoElement') videoElement: ElementRef<HTMLVideoElement> | undefined;
   stream: MediaStream | null = null;
-  currentFacingMode: string = 'user'; // Default: 'user' (front camera)
+  currentFacingMode: string = 'user'; // Default is front-facing camera (selfie mode)
+  selectedSession: string = '';
+  availableSessions: string[] = ['8:40 Am-9:40 Am', '9:40 Am-10:40 Am', '11:00 Am-12:00 Pm', '12:00 Pm-13:00 Pm', '13:40 Pm-14:40 Pm', '14:40 Pm-15:40 Pm'];
+  capturedImage: string | null = null;
+  studentInfo: any = {};
+
+  // Store uploaded images from sessionStorage
+  studentImages: string[] = [];
 
   constructor() { }
 
   ngOnInit(): void {
-    // The camera will not start automatically, waiting for the button click
+
+    const storedStudentInfo = sessionStorage.getItem('studentInfo');
+    console.log('Stored student info from sessionStorage:', storedStudentInfo);
+
+    if (storedStudentInfo) {
+      // Parse the student info and assign it to the studentInfo object
+      this.studentInfo = JSON.parse(storedStudentInfo);
+      console.log('Parsed student info:', this.studentInfo); // Debugging step
+    }
+    // Load uploaded images from sessionStorage (studentImages key)
+    const storedImages = sessionStorage.getItem('studentImages');
+    if (storedImages) {
+      this.studentImages = JSON.parse(storedImages); // Array of images
+    }
   }
 
   ngOnDestroy(): void {
@@ -24,108 +44,73 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Start the camera with a given facing mode (called on button click)
+  // Start the camera with the front-facing camera (selfie mode)
   startCamera(): void {
-    if (!this.videoElement) {
-      this.videoElement = document.createElement('video');
-      this.videoElement.width = 640;
-      this.videoElement.height = 480;
-      document.body.appendChild(this.videoElement); // Attach video to DOM
-    }
+    if (this.videoElement) {
+      const video: HTMLVideoElement = this.videoElement.nativeElement;
 
-    // Start the camera stream based on the default facing mode (front camera)
-    this.getCameraStream(this.currentFacingMode);
+      // Request front-facing camera (selfie mode) stream
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+        .then((stream) => {
+          this.stream = stream;
+          video.srcObject = stream;
+          video.play();
+
+          // Apply a mirror effect (flip horizontally) for front camera (selfie mode)
+          video.style.transform = 'scaleX(-1)';
+        })
+        .catch((err) => {
+          console.error('Error accessing the camera: ', err);
+        });
+    }
   }
 
-  // Capture image from the video and store it in sessionStorage
+  // Capture image from the video feed and store it
   captureImage(): void {
     if (this.videoElement) {
+      const video: HTMLVideoElement = this.videoElement.nativeElement;
       const canvas = document.createElement('canvas');
-      canvas.width = this.videoElement.videoWidth;
-      canvas.height = this.videoElement.videoHeight;
-
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
       const context = canvas.getContext('2d');
       if (context) {
-        // Apply mirroring transformation if the front camera (selfie mode) is being used
-        if (this.currentFacingMode === 'user') {
-          context.scale(-1, 1); // Flip horizontally (mirror effect)
-          context.drawImage(this.videoElement, -canvas.width, 0, canvas.width, canvas.height); // Draw the video with the mirror effect
-        } else {
-          context.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height); // Normal drawing for rear camera
-        }
-
-        // Get base64 string of the captured image
-        const imageUrl = canvas.toDataURL('image/png');
-        console.log('Captured image:', imageUrl);
-
-        // Store the captured image in sessionStorage
-        sessionStorage.setItem('capturedImage', imageUrl);
-
-        // Optionally, display the captured image as feedback
-        const img = document.createElement('img');
-        img.src = imageUrl;
-        document.body.appendChild(img);
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        this.capturedImage = canvas.toDataURL('image/png'); // Store the captured image as base64 string
       }
     }
   }
 
-  // Request camera stream with a specified facing mode (front or rear camera)
-  getCameraStream(facingMode: string): void {
-    // Stop the existing stream before starting a new one
-    if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
-    }
-
-    // Request media stream with the given facing mode (front or rear camera)
-    navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: facingMode // 'user' (front) or 'environment' (rear)
-      }
-    })
-    .then((stream: MediaStream) => {
-      this.stream = stream;
-      if (this.videoElement) {
-        this.videoElement.srcObject = stream;
-        this.videoElement.play(); // Start the video playback
-
-        // Apply mirror effect for front camera (selfie mode)
-        if (facingMode === 'user') {
-          this.videoElement.style.transform = 'scaleX(-1)'; // Mirror the video horizontally (selfie effect)
-        } else {
-          this.videoElement.style.transform = ''; // Remove transformation for rear camera
-        }
-      }
-    })
-    .catch((err) => {
-      console.error('Error accessing the camera: ', err);
-    });
-  }
-
-  // Compare the uploaded and captured images
+  // Compare the uploaded images from sessionStorage with the captured image
   compareImages(): void {
-    const uploadedImage = sessionStorage.getItem('uploadedImage');
-    const capturedImage = sessionStorage.getItem('capturedImage');
-    
-    if (uploadedImage && capturedImage) {
-      // Convert the base64 to images for comparison
-      const uploadedImg = new Image();
-      const capturedImg = new Image();
+    const capturedImage = this.capturedImage;
 
-      uploadedImg.src = uploadedImage;
+    if (this.studentImages.length > 0 && capturedImage) {
+      const capturedImg = new Image();
       capturedImg.src = capturedImage;
 
-      uploadedImg.onload = () => {
-        capturedImg.onload = () => {
-          const isMatch = this.compareImagePixels(uploadedImg, capturedImg);
-          if (isMatch) {
-            console.log('Images match!');
-          } else {
-            console.log('Images do not match.');
-          }
-        };
+      capturedImg.onload = () => {
+        let matchFound = false;
+
+        // Loop through each uploaded image to compare with the captured image
+        for (const uploadedImage of this.studentImages) {
+          const uploadedImg = new Image();
+          uploadedImg.src = uploadedImage;
+
+          uploadedImg.onload = () => {
+            const isMatch = this.compareImagePixels(uploadedImg, capturedImg);
+            if (isMatch) {
+              matchFound = true;
+              console.log('Images match!');
+            }
+          };
+        }
+
+        if (!matchFound) {
+          console.log('No matching images found.');
+        }
       };
     } else {
-      console.log('Images not found in session storage.');
+      console.log('No student images or captured image found in session storage.');
     }
   }
 
