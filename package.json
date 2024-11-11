@@ -19,7 +19,10 @@
     "@angular/platform-browser-dynamic": "^14.0.0-next.0",
     "@angular/router": "^14.0.0-next.0",
     "@ng-select/ng-select": "^7.0.0",
+    "@tensorflow-models/face-detection": "^1.0.3",
+    "@tensorflow/tfjs": "^4.22.0",
     "face-api.js": "^0.22.2",
+    "opencv.js": "^1.2.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

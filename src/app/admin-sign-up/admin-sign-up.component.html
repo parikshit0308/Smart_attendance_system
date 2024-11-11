@@ -1,0 +1,101 @@
+<div class="admin-sign-up-container">
+  <h1>Admin Sign-Up</h1>
+
+  <!-- Form start -->
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Admin Name -->
+    <div class="form-group">
+      <label for="adminName">Name</label>
+      <input
+        type="text"
+        id="adminName"
+        formControlName="adminName"
+        placeholder="Enter your full name"
+      />
+      <div *ngIf="form.get('adminName')?.invalid && form.get('adminName')?.touched" class="error-message">
+        <p>Name is required.</p>
+      </div>
+    </div>
+
+    <!-- Admin Email -->
+    <div class="form-group">
+      <label for="adminEmail">Email</label>
+      <input
+        type="email"
+        id="adminEmail"
+        formControlName="adminEmail"
+        placeholder="Enter your email address"
+      />
+      <div *ngIf="form.get('adminEmail')?.invalid && form.get('adminEmail')?.touched" class="error-message">
+        <p *ngIf="form.get('adminEmail')?.errors?.['required']">Email is required.</p>
+        <p *ngIf="form.get('adminEmail')?.errors?.['email']">Please enter a valid email.</p>
+      </div>
+    </div>
+
+    <!-- Admin Phone Number -->
+    <div class="form-group">
+      <label for="adminPhone">Phone Number</label>
+      <input
+        type="tel"
+        id="adminPhone"
+        formControlName="adminPhone"
+        placeholder="Enter your phone number"
+      />
+      <div *ngIf="form.get('adminPhone')?.invalid && form.get('adminPhone')?.touched" class="error-message">
+        <p *ngIf="form.get('adminPhone')?.errors?.['required']">Phone number is required.</p>
+        <p *ngIf="form.get('adminPhone')?.errors?.['pattern']">Please enter a valid 10-digit phone number.</p>
+      </div>
+    </div>
+
+    <!-- Admin Password -->
+    <div class="form-group">
+      <label for="adminPassword">Password</label>
+      <input
+        type="password"
+        id="adminPassword"
+        formControlName="adminPassword"
+        placeholder="Create a password"
+      />
+      <div *ngIf="form.get('adminPassword')?.invalid && form.get('adminPassword')?.touched" class="error-message">
+        <p *ngIf="form.get('adminPassword')?.errors?.['required']">Password is required.</p>
+        <p *ngIf="form.get('adminPassword')?.errors?.['minlength']">Password must be at least 8 characters long.</p>
+      </div>
+    </div>
+
+    <!-- Admin Key -->
+    <div class="form-group">
+      <label for="adminKey">Admin Key</label>
+      <input
+        type="text"
+        id="adminKey"
+        formControlName="adminKey"
+        placeholder="Enter your admin key"
+      />
+      <div *ngIf="form.get('adminKey')?.invalid && form.get('adminKey')?.touched" class="error-message">
+        <p>Admin key is required.</p>
+      </div>
+    </div>
+
+    <!-- Branch -->
+    <div class="form-group">
+      <label for="adminBranch">Branch</label>
+      <input
+        type="text"
+        id="adminBranch"
+        formControlName="adminBranch"
+        placeholder="Enter your branch"
+      />
+      <div *ngIf="form.get('adminBranch')?.invalid && form.get('adminBranch')?.touched" class="error-message">
+        <p>Branch is required.</p>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button (click)="showList()" type="submit" [disabled]="form.invalid">Sign Up</button>
+  </form>
+
+  <!-- "Already have an account?" link -->
+  <div class="account-link">
+    <p (click)="showSignIn()">Already have an account? Sign In</p>
+  </div>
+</div>

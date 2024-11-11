@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { flatMap } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,8 @@ export class AppComponent {
   adminList: boolean = false;
   adminView: boolean = false;
   adminAdd: boolean = false;
+  adminSignUp: boolean = false;
+  adminSignin: boolean = false
 
   ngOnInit(): void {
     this.signUp = true;
@@ -34,6 +37,25 @@ export class AppComponent {
     if(event == "ShowSignUp"){
       this.signIn = false;
       this.signUp = true;
+    }
+
+    if(event == "showAdminSignup"){
+      this.adminSignUp= true;
+      this.signUp = false;
+      this.signIn = false;
+      this.adminSignin = false;
+    }
+
+    if(event == "showAdminSignIn"){
+      this.adminSignin = true;
+      this.adminSignUp = false;
+    }
+
+    if(event == "showList"){
+      this.adminList = true;
+      this.adminView = false;
+      this.adminAdd = false;
+      this.adminSignUp = false
     }
   }
 }

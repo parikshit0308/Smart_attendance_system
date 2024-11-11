@@ -107,15 +107,57 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
     const capturedImage = sessionStorage.getItem('capturedImage');
     
     if (uploadedImage && capturedImage) {
-      // Simple base64 comparison
-      if (uploadedImage === capturedImage) {
-        console.log('Images match!');
-      } else {
-        console.log('Images do not match.');
-      }
+      // Convert the base64 to images for comparison
+      const uploadedImg = new Image();
+      const capturedImg = new Image();
+
+      uploadedImg.src = uploadedImage;
+      capturedImg.src = capturedImage;
+
+      uploadedImg.onload = () => {
+        capturedImg.onload = () => {
+          const isMatch = this.compareImagePixels(uploadedImg, capturedImg);
+          if (isMatch) {
+            console.log('Images match!');
+          } else {
+            console.log('Images do not match.');
+          }
+        };
+      };
     } else {
       console.log('Images not found in session storage.');
     }
   }
+
+  // Compare pixel-by-pixel if the images match
+  private compareImagePixels(image1: HTMLImageElement, image2: HTMLImageElement): boolean {
+    const canvas1 = document.createElement('canvas');
+    const canvas2 = document.createElement('canvas');
+    const ctx1 = canvas1.getContext('2d');
+    const ctx2 = canvas2.getContext('2d');
+
+    if (ctx1 && ctx2) {
+      canvas1.width = image1.width;
+      canvas1.height = image1.height;
+      canvas2.width = image2.width;
+      canvas2.height = image2.height;
+
+      ctx1.drawImage(image1, 0, 0);
+      ctx2.drawImage(image2, 0, 0);
+
+      const data1 = ctx1.getImageData(0, 0, image1.width, image1.height).data;
+      const data2 = ctx2.getImageData(0, 0, image2.width, image2.height).data;
+
+      // Compare pixel data
+      for (let i = 0; i < data1.length; i++) {
+        if (data1[i] !== data2[i]) {
+          return false; // If any pixel doesn't match, return false
+        }
+      }
+
+      return true; // If all pixels match, return true
+    }
+
+    return false; // If canvas context is not available, return false
+  }
 }
-  

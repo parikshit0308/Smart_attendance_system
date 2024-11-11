@@ -11,6 +11,9 @@ import { AdminListComponent } from './admin-list/admin-list.component';
 import { StudentCameraComponent } from './student-camera/student-camera.component';
 import { StudentSignUpComponent } from './student-sign-up/student-sign-up.component';
 import { StudentSignInComponent } from './student-sign-in/student-sign-in.component';
+import { AdminSignUpComponent } from './admin-sign-up/admin-sign-up.component';
+import { AdminSignInComponent } from './admin-sign-in/admin-sign-in.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,13 +23,16 @@ import { StudentSignInComponent } from './student-sign-in/student-sign-in.compon
     AdminListComponent,
     StudentCameraComponent,
     StudentSignUpComponent,
-    StudentSignInComponent
+    StudentSignInComponent,
+    AdminSignUpComponent,
+    AdminSignInComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgSelectModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

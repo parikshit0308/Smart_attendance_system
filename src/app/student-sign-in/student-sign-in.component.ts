@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router'; // If you want to navigate to another page after login
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-sign-in',
@@ -8,28 +9,34 @@ import { Router } from '@angular/router'; // If you want to navigate to another 
 })
 export class StudentSignInComponent implements OnInit {
 
-  studentEmail: string = '';
-  studentPassword: string = '';
+  signInForm!: FormGroup;
 
-  constructor(private router: Router) { }
+  @Output() NextBtnClick = new EventEmitter<string>();
+
+  constructor(private fb: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
-    // Initialize the component (optional)
+    this.signInForm = this.fb.group({
+      studentEmail: ['', [Validators.required, Validators.email]],
+      studentPassword: ['', Validators.required]
+    });
   }
 
   // Sign-in logic
   onSignIn(): void {
-    // Retrieve stored student information from sessionStorage
+    if (this.signInForm.invalid) {
+      alert('Please fill out the form correctly.');
+      return;
+    }
+
+    const { studentEmail, studentPassword } = this.signInForm.value;
     const storedStudentInfo = sessionStorage.getItem('studentInfo');
     
     if (storedStudentInfo) {
       const studentInfo = JSON.parse(storedStudentInfo);
-
-      // Check if the entered email and password match the stored values
-      if (this.studentEmail === studentInfo.email && this.studentPassword === studentInfo.password) {
-        // Successfully logged in, navigate to the dashboard or home page
+      if (studentEmail === studentInfo.email && studentPassword === studentInfo.password) {
         alert('Successfully logged in!');
-        this.router.navigate(['/dashboard']);  // Or any other route you prefer
+        this.router.navigate(['/dashboard']);
       } else {
         alert('Invalid email or password!');
       }
@@ -39,16 +46,12 @@ export class StudentSignInComponent implements OnInit {
   }
 
   // Navigate to Sign-Up page
-  @Output() NextBtnClick = new EventEmitter<string>();
-
-  onSignUp(){
-    let openroleacess="ShowSignUp";
-    this.NextBtnClick.emit(openroleacess)
+  onSignUp(): void {
+    this.NextBtnClick.emit("ShowSignUp");
   }
 
-  showCamera(){
-    let openroleacess="ShowCamera"
-    this.NextBtnClick.emit(openroleacess)
+  showCamera(): void {
+    this.NextBtnClick.emit("ShowCamera");
   }
 
   // Optional: Add logic for Forgot Password

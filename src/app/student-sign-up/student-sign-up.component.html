@@ -2,61 +2,46 @@
   <h1>Student Sign-Up</h1>
 
   <!-- Form start -->
-  <form (ngSubmit)="onSubmit()" #signInForm="ngForm">
+  <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
     <!-- Student Name -->
     <div class="form-group">
       <label for="studentName">Name</label>
-      <input type="text" id="studentName" name="studentName" ngModel required placeholder="Enter your full name" />
+      <input type="text" id="studentName" formControlName="studentName" placeholder="Enter your full name" />
+      <div *ngIf="signUpForm.get('studentName')?.invalid && signUpForm.get('studentName')?.touched" class="error-message">
+        Name is required.
+      </div>
     </div>
 
     <!-- Student Email -->
     <div class="form-group">
       <label for="studentEmail">Email</label>
-      <input
-        type="email"
-        id="studentEmail"
-        name="studentEmail"
-        ngModel
-        required
-        email
-        placeholder="Enter your email address"
-        #email="ngModel"
-      />
-      <div *ngIf="email.invalid && email.touched" class="error-message">
-        <p *ngIf="email.errors?.['required']">Email is required.</p>
-        <p *ngIf="email.errors?.['email']">Please enter a valid email.</p>
+      <input type="email" id="studentEmail" formControlName="studentEmail" placeholder="Enter your email address" />
+      <div *ngIf="signUpForm.get('studentEmail')?.invalid && signUpForm.get('studentEmail')?.touched" class="error-message">
+        <p *ngIf="signUpForm.get('studentEmail')?.errors?.['required']">Email is required.</p>
+        <p *ngIf="signUpForm.get('studentEmail')?.errors?.['email']">Please enter a valid email.</p>
       </div>
     </div>
 
     <!-- Student Phone -->
     <div class="form-group">
       <label for="studentPhone">Phone Number</label>
-      <input
-        type="tel"
-        id="studentPhone"
-        name="studentPhone"
-        ngModel
-        required
-        pattern="^\d{10}$"
-        placeholder="Enter your phone number"
-        #phone="ngModel"
-      />
-      <div *ngIf="phone.invalid && phone.touched" class="error-message">
-        <p *ngIf="phone.errors?.['required']">Phone number is required.</p>
-        <p *ngIf="phone.errors?.['pattern']">Please enter a valid 10-digit phone number.</p>
+      <input type="tel" id="studentPhone" formControlName="studentPhone" placeholder="Enter your phone number" />
+      <div *ngIf="signUpForm.get('studentPhone')?.invalid && signUpForm.get('studentPhone')?.touched" class="error-message">
+        <p *ngIf="signUpForm.get('studentPhone')?.errors?.['required']">Phone number is required.</p>
+        <p *ngIf="signUpForm.get('studentPhone')?.errors?.['pattern']">Please enter a valid 10-digit phone number.</p>
       </div>
     </div>
 
     <!-- Student Roll Number -->
     <div class="form-group">
       <label for="studentRollNo">Roll Number</label>
-      <input type="text" id="studentRollNo" name="studentRollNo" ngModel required placeholder="Enter your roll number" />
+      <input type="text" id="studentRollNo" formControlName="studentRollNo" placeholder="Enter your roll number" />
     </div>
 
     <!-- Student Class -->
     <div class="form-group">
       <label for="studentClass">Class</label>
-      <select id="studentClass" name="studentClass" ngModel required>
+      <select id="studentClass" formControlName="studentClass">
         <option value="FE">F.E</option>
         <option value="SE">S.E</option>
         <option value="TE">T.E</option>
@@ -67,25 +52,16 @@
     <!-- Department -->
     <div class="form-group">
       <label for="studentDepartment">Department</label>
-      <input type="text" id="studentDepartment" name="studentDepartment" ngModel required placeholder="Enter your department" />
+      <input type="text" id="studentDepartment" formControlName="studentDepartment" placeholder="Enter your department" />
     </div>
 
     <!-- Password -->
     <div class="form-group">
       <label for="studentPassword">Password</label>
-      <input
-        type="password"
-        id="studentPassword"
-        name="studentPassword"
-        ngModel
-        required
-        minlength="8"
-        placeholder="Create a password"
-        #password="ngModel"
-      />
-      <div *ngIf="password.invalid && password.touched" class="error-message">
-        <p *ngIf="password.errors?.['required']">Password is required.</p>
-        <p *ngIf="password.errors?.['minlength']">Password must be at least 8 characters long.</p>
+      <input type="password" id="studentPassword" formControlName="studentPassword" placeholder="Create a password" />
+      <div *ngIf="signUpForm.get('studentPassword')?.invalid && signUpForm.get('studentPassword')?.touched" class="error-message">
+        <p *ngIf="signUpForm.get('studentPassword')?.errors?.['required']">Password is required.</p>
+        <p *ngIf="signUpForm.get('studentPassword')?.errors?.['minlength']">Password must be at least 8 characters long.</p>
       </div>
     </div>
 
@@ -109,11 +85,15 @@
     </div>
 
     <!-- Submit Button -->
-    <button (click)="showCamera()" type="submit" [disabled]="!signInForm.valid || uploadedImages.length === 0">Sign Up</button>
+    <button (click)="showCamera()" type="submit" [disabled]="signUpForm.invalid || uploadedImages.length === 0">Sign Up</button>
   </form>
 
   <!-- "Already have an account?" link -->
   <div class="account-link">
-    <p (click)="showSignIn()">Already have an account?Sign In</p>
+    <p (click)="showSignIn()">Already have an account? Sign In</p>
+  </div>
+
+  <div class="admin-link">
+    <p (click)="AdminSignUp()">Are you an Admin?</p>
   </div>
 </div>

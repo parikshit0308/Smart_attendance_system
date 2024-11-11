@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-student-sign-up',
@@ -9,89 +10,77 @@ export class StudentSignUpComponent implements OnInit {
 
   @Output() NextBtnClick = new EventEmitter<string>();
 
-  showCamera(){
-    let openroleacess="ShowCamera"
-    this.NextBtnClick.emit(openroleacess)
-  }
-
-  showSignIn(){
-    let openroleacess="showSignIn"
-    this.NextBtnClick.emit(openroleacess)
-  }
-
+  signUpForm!: FormGroup;
   uploadedImages: string[] = [];
-  studentName: string = '';
-  studentEmail: string = '';
-  studentPhone: string = '';
-  studentRollNo: string = '';
-  studentClass: string = '';
-  studentDepartment: string = '';
-  studentPassword: string = '';  // Add the password field
 
-  constructor() { }
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    this.signUpForm = this.fb.group({
+      studentName: ['', Validators.required],
+      studentEmail: ['', [Validators.required, Validators.email]],
+      studentPhone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      studentRollNo: ['', Validators.required],
+      studentClass: ['', Validators.required],
+      studentDepartment: ['', Validators.required],
+      studentPassword: ['', [Validators.required, Validators.minLength(8)]],
+      isAdmin: [false]
+    });
+
+    // Load previously uploaded images if they exist in sessionStorage
     const storedImages = sessionStorage.getItem('uploadedImages');
     if (storedImages) {
       this.uploadedImages = JSON.parse(storedImages);
     }
   }
 
-  // Handle image upload
+  showCamera() {
+    const openRoleAccess = "ShowCamera";
+    this.NextBtnClick.emit(openRoleAccess);
+  }
+
+  showSignIn() {
+    const openRoleAccess = "showSignIn";
+    this.NextBtnClick.emit(openRoleAccess);
+  }
+
+  AdminSignUp() {
+    const openRoleAccess = "showAdminSignup";
+    this.NextBtnClick.emit(openRoleAccess);
+  }
+
+  // Handle file input for image uploads
   handleFileInput(event: any): void {
     const files = event.target.files;
-    if (files) {
-      // Limit to a maximum of 3 images
-      if (files.length > 3) {
-        alert('You can upload a maximum of 3 photos.');
-        return;
-      }
-
-      // Clear the previous uploaded images
+    if (files && files.length <= 3) {
       this.uploadedImages = [];
-
-      // Process each file
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const reader = new FileReader();
-        
         reader.onload = (e) => {
           const imageUrl = e.target?.result as string;
-
-          // Store the image in the uploaded images array
           this.uploadedImages.push(imageUrl);
         };
-
-        reader.readAsDataURL(file); // Convert file to base64
+        reader.readAsDataURL(file);
       }
-
-      // Store the uploaded images in sessionStorage
       sessionStorage.setItem('uploadedImages', JSON.stringify(this.uploadedImages));
-      console.log('Uploaded Images Stored:', this.uploadedImages);
+    } else {
+      alert('You can upload a maximum of 3 photos.');
     }
   }
 
-  // Form submit
   onSubmit(): void {
-    if (this.uploadedImages.length === 0) {
-      alert('Please upload at least one image.');
+    if (this.signUpForm.invalid || this.uploadedImages.length === 0) {
+      alert('Please fill all required fields and upload at least one image.');
       return;
     }
 
-    // Store other student information in sessionStorage (optional)
-    const studentInfo = {
-      name: this.studentName,
-      email: this.studentEmail,
-      phone: this.studentPhone,
-      rollNo: this.studentRollNo,
-      studentClass: this.studentClass,
-      department: this.studentDepartment,
-      password: this.studentPassword // Store the password if needed
-    };
+    const studentInfo = this.signUpForm.value;
+    studentInfo.uploadedImages = this.uploadedImages;
 
     sessionStorage.setItem('studentInfo', JSON.stringify(studentInfo));
     console.log('Student Info Stored:', studentInfo);
 
-    // Proceed with your logic for submitting the form
+    alert('Student Sign-Up Successful!');
   }
 }
