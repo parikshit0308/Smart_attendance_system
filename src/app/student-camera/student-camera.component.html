@@ -1,5 +1,4 @@
 <div class="camera-container">
-  <!-- Student Info Section -->
   <div class="student-info">
     <h3>Student Information</h3>
     <p><strong>Name:</strong> {{ studentInfo?.studentName }}</p>
@@ -8,7 +7,6 @@
     <p><strong>Year:</strong> {{ studentInfo.studentClass }}</p>
   </div>
 
-  <!-- Session Dropdown -->
   <div class="session-selector">
     <label for="session">Session:</label>
     <select id="session" [(ngModel)]="selectedSession">
@@ -16,19 +14,17 @@
     </select>
   </div>
 
-  <!-- Camera Section -->
   <div class="camera-controls">
     <video #videoElement width="640" height="480" autoplay></video>
     <div class="camera-buttons">
-      <button (click)="startCamera()">Mark Attendance</button>
-      <button (click)="captureImage(); compareImages()">Capture and Compare Image</button>
+      <button (click)="startCamera()">Start Camera</button>
+      <button (click)="captureImage()">Capture Image</button>
+      <button (click)="compareImages()">Mark Attendance</button>
     </div>
   </div>
 
-  <!-- Display captured image -->
   <div *ngIf="capturedImage" class="captured-image">
     <h4>Captured Image:</h4>
-    <img [src]="capturedImage" alt="Captured Image" width="320" height="240" [style.transform]="'scaleX(-1)'"/>
+    <img [src]="capturedImage" alt="Captured Image" width="320" height="240"/>
   </div>
-  <!-- <button (click)="clearSessionStorage()">Clear All Session Storage</button> -->
 </div>
