@@ -25,7 +25,6 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
       this.studentInfo = JSON.parse(storedStudentInfo);
     }
 
-    // Load uploaded student images from localStorage
     const storedImages = localStorage.getItem('studentImages');
     if (storedImages) {
       this.studentImages = JSON.parse(storedImages);
@@ -41,14 +40,12 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Load face recognition models
   async loadFaceApiModels() {
     await faceapi.nets.tinyFaceDetector.loadFromUri('/assets/models');
     await faceapi.nets.faceLandmark68Net.loadFromUri('/assets/models');
     await faceapi.nets.faceRecognitionNet.loadFromUri('/assets/models');
   }
 
-  // Start camera
   async startCamera(): Promise<void> {
     if (this.videoElement) {
       try {
@@ -132,7 +129,6 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Extract face descriptor from an image
   async getFaceDescriptor(image: HTMLImageElement): Promise<Float32Array | null> {
     const detections = await faceapi.detectSingleFace(image, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
     return detections ? detections.descriptor : null;

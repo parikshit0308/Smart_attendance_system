@@ -16,7 +16,6 @@ export class StudentSignUpComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    // Initialize form with validation
     this.signUpForm = this.fb.group({
       studentName: ['', Validators.required],
       studentEmail: ['', [Validators.required, Validators.email]],
@@ -27,29 +26,26 @@ export class StudentSignUpComponent implements OnInit {
       studentPassword: ['', [Validators.required, Validators.minLength(8)]],
       isAdmin: [false],
     });
-    // Load previously uploaded images from localStorage
+    // localStorage.clear();
+    // sessionStorage.clear();
     const storedImages = localStorage.getItem('studentImages');
     if (storedImages) {
       this.uploadedImages = JSON.parse(storedImages);
     }
   }
 
-  // Navigate to camera component
   showCamera() {
     this.NextBtnClick.emit("ShowCamera");
   }
 
-  // Navigate to sign-in component
   showSignIn() {
     this.NextBtnClick.emit("showSignIn");
   }
 
-  // Navigate to admin sign-up
   AdminSignUp() {
     this.NextBtnClick.emit("showAdminSignup");
   }
 
-  // Handle file input for image uploads (max 3 images)
   handleFileInput(event: any): void {
     const files = event.target.files;
     if (files && files.length > 3) {
@@ -57,7 +53,7 @@ export class StudentSignUpComponent implements OnInit {
       return;
     }
     
-    this.uploadedImages = []; // Clear previous images
+    this.uploadedImages = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const reader = new FileReader();
@@ -68,11 +64,9 @@ export class StudentSignUpComponent implements OnInit {
       reader.readAsDataURL(file);
     }
 
-    // Store images in localStorage
     localStorage.setItem('studentImages', JSON.stringify(this.uploadedImages));
   }
 
-  // Submit form
   onSubmit(): void {
     if (this.signUpForm.invalid || this.uploadedImages.length === 0) {
       alert('Please fill all required fields and upload at least one image.');
