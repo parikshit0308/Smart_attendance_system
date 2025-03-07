@@ -73,8 +73,10 @@
     <!-- Display uploaded images -->
     <div *ngIf="uploadedImages.length > 0" class="uploaded-image-container">
       <h3>Uploaded Images:</h3>
-      <div *ngFor="let image of uploadedImages; let i = index">
-        <img [src]="image" alt="Uploaded Image {{i + 1}}" class="uploaded-image" />
+      <div class="photos-flexer">
+        <div *ngFor="let image of uploadedImages; let i = index">
+          <img [src]="image" alt="Uploaded Image {{i + 1}}" class="uploaded-image" />
+        </div>
       </div>
     </div>
 

@@ -32,6 +32,7 @@ export class AppComponent {
       this.signIn = false;
       this.signUp = false;
       this.camera = true;
+      this.adminList = false;
     }
 
     if(event == "ShowSignUp"){
@@ -57,6 +58,7 @@ export class AppComponent {
       this.adminAdd = false;
       this.adminSignUp = false;
       this.adminSignin = false;
+      this.camera = false;
     }
 
     if(event == "showAdd"){

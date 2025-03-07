@@ -100,7 +100,31 @@
     justify-content: center;
   }
   
-  .camera-buttons button {
+  // .camera-buttons button {
+  //   background-color: #007bff;
+  //   color: white;
+  //   font-size: 18px;
+  //   padding: 12px 25px;
+  //   border: none;
+  //   border-radius: 8px;
+  //   cursor: pointer;
+  //   transition: background-color 0.3s ease, transform 0.2s ease;
+  //   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  // }
+
+  .start-camera,.capture-image{
+    background-color: #007bff;
+    color: white;
+    font-size: 18px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .mark-attendance{
     background-color: #007bff;
     color: white;
     font-size: 18px;
@@ -130,7 +154,6 @@
     border-radius: 8px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
-    transform: scaleX(-1);
   }
   
   .captured-image h4 {
@@ -142,21 +165,13 @@
     border-radius: 8px;
     border: 2px solid #ddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transform: scaleX(-1);
   }
   
   /* Mobile responsiveness */
   @media (max-width: 768px) {
     .camera-container {
       padding: 15px;
-    }
-  
-    .info-row {
-      flex-direction: column;
-    }
-  
-    .info-row div {
-      width: 100%;
-      margin-bottom: 10px;
     }
   
     .camera-controls video {
@@ -173,5 +188,12 @@
       width: 100%;
       margin-bottom: 10px;
     }
+
+    .disabled-button {
+    background-color: #d6d6d6 !important;
+    color: #7d7d7d !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
   }
+}
   

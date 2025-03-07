@@ -1,5 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
 import * as faceapi from 'face-api.js';
+import { Api_Service } from '../api-services.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-student-camera',
@@ -15,8 +17,10 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
   capturedImage: string | null = null;
   studentInfo: any = {};
   studentImages: string[] = [];
+  isAttendanceEnabled = false;
 
-  constructor() {}
+  constructor(private apiService: Api_Service,private toastr: ToastrService) {}
+  @Output() NextBtnClick = new EventEmitter<string>();
 
   async ngOnInit(): Promise<void> {
     // Load student info
@@ -32,6 +36,12 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
 
     // Load Face-api.js models
     await this.loadFaceApiModels();
+
+    
+    this.apiService.attendanceStatus$.subscribe(status => {
+      this.isAttendanceEnabled = status;
+      console.log("Attendance Status Updated:", this.isAttendanceEnabled);
+    });
   }
 
   ngOnDestroy(): void {
@@ -44,6 +54,7 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
     await faceapi.nets.tinyFaceDetector.loadFromUri('/assets/models');
     await faceapi.nets.faceLandmark68Net.loadFromUri('/assets/models');
     await faceapi.nets.faceRecognitionNet.loadFromUri('/assets/models');
+    console.log("Face API Models Loaded");
   }
 
   async startCamera(): Promise<void> {
@@ -79,20 +90,21 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
   }
 
   async compareImages(): Promise<void> {
+    debugger
     if (!this.capturedImage) {
-      alert('Please capture an image first.');
+      this.toastr.warning('Please capture an image first.','Warning')
       return;
     }
 
     const capturedImgElement = await this.createImageElement(this.capturedImage);
     if (!capturedImgElement) {
-      alert('Error processing captured image.');
+      this.toastr.error('Error processing captured image.','Error')
       return;
     }
 
     const capturedFaceDescriptor = await this.getFaceDescriptor(capturedImgElement);
     if (!capturedFaceDescriptor) {
-      alert('No face detected in the captured image.');
+      this.toastr.error("No face detected in the captured image",'Error')
       return;
     }
 
@@ -108,15 +120,15 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
       const distance = faceapi.euclideanDistance(capturedFaceDescriptor, uploadedFaceDescriptor);
       console.log(`Face match distance: ${distance}`);
 
-      if (distance < 0.5) { 
+      if (distance < 0.5) {
         matchFound = true;
-        alert('Attendance Marked Successfully!');
+        this.toastr.success('Attendance Marked Successfully','Success');
         break;
       }
     }
 
     if (!matchFound) {
-      alert('Face not recognized. Please try again.');
+      this.toastr.error('Face not recognized. Please try again.','Error');
     }
   }
 
@@ -132,5 +144,9 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
   async getFaceDescriptor(image: HTMLImageElement): Promise<Float32Array | null> {
     const detections = await faceapi.detectSingleFace(image, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
     return detections ? detections.descriptor : null;
+  }
+
+  showList() {
+    this.NextBtnClick.emit("showList");
   }
 }

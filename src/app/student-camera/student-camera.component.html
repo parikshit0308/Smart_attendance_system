@@ -12,14 +12,19 @@
     <select id="session" [(ngModel)]="selectedSession">
       <option *ngFor="let session of availableSessions" [value]="session">{{ session }}</option>
     </select>
+    <button (click)="showList()">Emit</button>
   </div>
 
   <div class="camera-controls">
     <video #videoElement width="640" height="480" autoplay></video>
     <div class="camera-buttons">
-      <button (click)="startCamera()">Start Camera</button>
-      <button (click)="captureImage()">Capture Image</button>
-      <button (click)="compareImages()">Mark Attendance</button>
+      <button class="start-camera" (click)="startCamera()">Start Camera</button>
+      <button class="capture-image" (click)="captureImage()">Capture Image</button>
+      <button *ngIf="isAttendanceEnabled" 
+      class="mark-attendance" 
+      (click)="compareImages()">
+        Mark Attendance
+      </button>
     </div>
   </div>
 

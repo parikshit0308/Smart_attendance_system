@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Api_Service } from '../api-services.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-student-sign-in',
@@ -8,11 +9,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./student-sign-in.component.scss']
 })
 export class StudentSignInComponent implements OnInit {
-
   signInForm!: FormGroup;
   @Output() NextBtnClick = new EventEmitter<string>();
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(private fb: FormBuilder, private apiService: Api_Service, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.signInForm = this.fb.group({
@@ -22,26 +22,30 @@ export class StudentSignInComponent implements OnInit {
   }
 
   onSignIn(): void {
+    debugger
     if (this.signInForm.invalid) {
-      alert('Please fill out the form correctly.');
+        this.toastr.error('Please fill out the form correctly.','Error');
       return;
     }
 
-    const { studentEmail, studentPassword } = this.signInForm.value;
-    const storedStudentInfo = sessionStorage.getItem('studentInfo');
-    
-    if (storedStudentInfo) {
-      const studentInfo = JSON.parse(storedStudentInfo);
-      // Ensure the correct keys for student email and password
-      if (studentEmail === studentInfo.studentEmail && studentPassword === studentInfo.studentPassword) {
-        alert('Successfully logged in!');
+    const requestBody = {
+      email: this.signInForm.value.studentEmail,
+      password: this.signInForm.value.studentPassword
+    };
+
+    this.apiService.signIn(requestBody).subscribe({
+      next: (response) => {
+        this.toastr.success('Successfully logged in!','Success')
         this.showCamera();
-      } else {
-        alert('Invalid email or password!');
+      },
+      error: (error) => {
+        if (error.status === 400) {
+          this.toastr.error('Invalid email or password!','Error');
+        } else {
+          this.toastr.error('Something went wrong. Please try again.', 'Error');
+        }
       }
-    } else {
-      alert('No account found. Please sign up first!');
-    }
+    });
   }
 
   onSignUp(): void {

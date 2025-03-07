@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Api_Service } from '../api-services.service';
 
 @Component({
   selector: 'app-admin-sign-in',
@@ -8,36 +9,49 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class AdminSignInComponent implements OnInit {
   @Output() NextBtnClick = new EventEmitter<string>();
-  
-  // Define the form group
   signInForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private apiService: Api_Service) {}
 
   ngOnInit(): void {
-    // Initialize the form with form controls and validators
     this.signInForm = this.fb.group({
       adminEmail: ['', [Validators.required, Validators.email]],
       adminPassword: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
 
-  showSignUp() {
-    const openSignUpPage = "showAdminSignup";
-    this.NextBtnClick.emit(openSignUpPage);
-  }
-
   onSignIn() {
+    debugger
     if (this.signInForm.invalid) {
-      return; // Exit if form is invalid
+      alert('Please fill out the form correctly.');
+      return;
     }
 
-    const signInData = {
+    const requestBody = {
       email: this.signInForm.value.adminEmail,
       password: this.signInForm.value.adminPassword
     };
-    
-    console.log('Sign-In Data:', signInData);
-    // Handle authentication or other sign-in logic here
+
+    this.apiService.signInAdmin(requestBody).subscribe({
+      next: (response) => {
+        alert('Admin logged in successfully!');
+        this.showList();
+      },
+      error: (error) => {
+        if (error.status === 400) {
+          alert('Invalid email or password!');
+        } else {
+          alert('Something went wrong. Please try again.');
+        }
+      }
+    });
+  }
+
+  showSignUp() {
+    this.NextBtnClick.emit("showAdminSignup");
+  }
+
+  showList() {
+    this.NextBtnClick.emit("showList");
   }
 }

@@ -223,3 +223,9 @@ button:disabled:hover {
   background-color: #fff;
   border-color: #0056b3;
 }
+
+.photos-flexer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

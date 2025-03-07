@@ -1,12 +1,15 @@
 <div class="admin-container">
     <h2>Student Information</h2>
 
-    <!-- Add Student Button -->
     <div class="actions">
+        <button class="add-button" (click)="toggleAttendance()">
+            {{ isAttendanceActive ? 'Stop Attendance' : 'Start Attendance' }}
+        </button>
         <button class="add-button" (click)="showAdd()">Add Student</button>
+        <button class="add-button" (click)="exportToExcel()">Export to Excel</button>
     </div>
 
-    <div *ngIf="studentInfo; else noData" class="student-table">
+    <div *ngIf="studentInfo.length > 0; else noData" class="student-table">
         <table>
             <thead>
                 <tr>
@@ -20,14 +23,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>{{ studentInfo.studentName }}</td>
-                    <td>{{ studentInfo.studentRollNo }}</td>
-                    <td>{{ studentInfo.studentDepartment }}</td>
-                    <td>{{ studentInfo.studentClass }}</td>
-                    <td>{{ studentInfo.studentEmail }}</td>
-                    <td>{{ studentInfo.studentPhone }}</td>
-                    <td><button class="edit-button" (click)="editStudent(studentInfo)">Edit</button></td>
+                <tr *ngFor="let student of studentInfo">
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.rollno }}</td> 
+                    <td>{{ student.department }}</td>
+                    <td>{{ student.studentClass || student.class }}</td> 
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.phoneno }}</td> 
+                    <td><button class="edit-button" (click)="editStudent(student)">Edit</button></td>
                 </tr>
             </tbody>
         </table>
