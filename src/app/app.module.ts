@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -42,7 +43,8 @@ import { ReactiveFormsModule } from '@angular/forms';
       positionClass: 'toast-top-right',
       timeOut: 3000, 
       progressBar: true,
-    })
+    }),
+    NgxPaginationModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

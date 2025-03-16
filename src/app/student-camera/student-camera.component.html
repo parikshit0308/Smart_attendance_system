@@ -12,7 +12,6 @@
     <select id="session" [(ngModel)]="selectedSession">
       <option *ngFor="let session of availableSessions" [value]="session">{{ session }}</option>
     </select>
-    <button (click)="showList()">Emit</button>
   </div>
 
   <div class="camera-controls">

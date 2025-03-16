@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Api_Service } from '../api-services.service';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-list',
@@ -11,8 +12,11 @@ import { saveAs } from 'file-saver';
 export class AdminListComponent implements OnInit {
   studentInfo: any = null;
   isAttendanceActive = false;
+  selectedClass: string = '';
+  currentPage: number = 1;
+  filteredStudents: any[] = [];
 
-  constructor(private apiService: Api_Service) {}
+  constructor(private apiService: Api_Service, private router: Router) {}
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -24,26 +28,37 @@ export class AdminListComponent implements OnInit {
     });
   }
 
+  filterByClass(): void {
+    if (!this.selectedClass || this.selectedClass === '') {
+      this.filteredStudents = this.studentInfo;
+    } else {
+      this.filteredStudents = this.studentInfo.filter(
+        (student: any) => (student.studentClass || student.class) === this.selectedClass
+      );
+    }
+    this.currentPage = 1; // ✅ Reset to page 1 on filter
+  }
+
   toggleAttendance() {
     if (this.isAttendanceActive) {
       this.apiService.stopAttendance();
+      console.log("status",this.isAttendanceActive);
     } else {
       this.apiService.startAttendance();
+      console.log("status",this.isAttendanceActive);
     }
   }
 
   fetchStudentList(): void {
-    debugger
     this.apiService.getStudentList().subscribe(
       (data) => {
-        console.log("Students data",data)
         if (data && data.length > 0) {
-          this.studentInfo = data
-
-          console.log("Student info",this.studentInfo)
+          this.studentInfo = data;
+          this.filteredStudents = this.studentInfo; 
           sessionStorage.setItem('studentInfo', JSON.stringify(this.studentInfo));
         } else {
-          console.log('No student data found.');
+          this.studentInfo = [];
+          this.filteredStudents = [];
         }
       },
       (error) => {
@@ -68,6 +83,7 @@ export class AdminListComponent implements OnInit {
 
   showAdd() {
     this.NextBtnClick.emit("showAdd");
+    this.router.navigate(['/admin-add']);
   }
 
   showCamera() {

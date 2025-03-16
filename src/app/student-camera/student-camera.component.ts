@@ -19,11 +19,14 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
   studentImages: string[] = [];
   isAttendanceEnabled = false;
 
-  constructor(private apiService: Api_Service,private toastr: ToastrService) {}
+  allowedLatitude = 18.5932063;
+  allowedLongitude = 73.9952850;
+  allowedRadius = 100;
+
+  constructor(private apiService: Api_Service, private toastr: ToastrService) {}
   @Output() NextBtnClick = new EventEmitter<string>();
 
   async ngOnInit(): Promise<void> {
-    // Load student info
     const storedStudentInfo = sessionStorage.getItem('studentInfo');
     if (storedStudentInfo) {
       this.studentInfo = JSON.parse(storedStudentInfo);
@@ -34,10 +37,8 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
       this.studentImages = JSON.parse(storedImages);
     }
 
-    // Load Face-api.js models
     await this.loadFaceApiModels();
 
-    
     this.apiService.attendanceStatus$.subscribe(status => {
       this.isAttendanceEnabled = status;
       console.log("Attendance Status Updated:", this.isAttendanceEnabled);
@@ -65,9 +66,9 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
         }
 
         const constraints: MediaStreamConstraints = {
-          video: { facingMode: 'user' } 
+          video: { facingMode: 'user' }
         };
-  
+
         this.stream = await navigator.mediaDevices.getUserMedia(constraints);
         this.videoElement.nativeElement.srcObject = this.stream;
         this.videoElement.nativeElement.play();
@@ -90,21 +91,26 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
   }
 
   async compareImages(): Promise<void> {
-    debugger
     if (!this.capturedImage) {
-      this.toastr.warning('Please capture an image first.','Warning')
+      this.toastr.warning('Please capture an image first.', 'Warning');
+      return;
+    }
+
+    const locationAllowed = await this.isWithinAllowedLocation();
+    if (!locationAllowed) {
+      this.toastr.error('You are outside the allowed location. Attendance not marked.', 'Location Error');
       return;
     }
 
     const capturedImgElement = await this.createImageElement(this.capturedImage);
     if (!capturedImgElement) {
-      this.toastr.error('Error processing captured image.','Error')
+      this.toastr.error('Error processing captured image.', 'Error');
       return;
     }
 
     const capturedFaceDescriptor = await this.getFaceDescriptor(capturedImgElement);
     if (!capturedFaceDescriptor) {
-      this.toastr.error("No face detected in the captured image",'Error')
+      this.toastr.error("No face detected in the captured image", 'Error');
       return;
     }
 
@@ -122,13 +128,13 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
 
       if (distance < 0.5) {
         matchFound = true;
-        this.toastr.success('Attendance Marked Successfully','Success');
+        this.toastr.success('Attendance Marked Successfully', 'Success');
         break;
       }
     }
 
     if (!matchFound) {
-      this.toastr.error('Face not recognized. Please try again.','Error');
+      this.toastr.error('Face not recognized. Please try again.', 'Error');
     }
   }
 
@@ -146,7 +152,38 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
     return detections ? detections.descriptor : null;
   }
 
-  showList() {
-    this.NextBtnClick.emit("showList");
+  private async isWithinAllowedLocation(): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        this.toastr.error('Geolocation is not supported by this browser.', 'Error');
+        resolve(false);
+      }
+
+      navigator.geolocation.getCurrentPosition(position => {
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+        const distance = this.getDistanceFromLatLonInMeters(this.allowedLatitude, this.allowedLongitude, userLat, userLng);
+        console.log('User Location Distance:', distance);
+        resolve(distance <= this.allowedRadius);
+      }, error => {
+        this.toastr.error('Error getting location. Please allow location access.', 'Error');
+        resolve(false);
+      });
+    });
+  }
+
+  private getDistanceFromLatLonInMeters(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371e3;
+    const φ1 = lat1 * Math.PI / 180;
+    const φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c;
   }
 }

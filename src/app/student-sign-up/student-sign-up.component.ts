@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';4
 import { Api_Service } from '../api-services.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-sign-up',
@@ -15,7 +16,7 @@ export class StudentSignUpComponent implements OnInit {
   signUpForm!: FormGroup;
   uploadedImages: string[] = [];
 
-  constructor(private fb: FormBuilder, private apiService: Api_Service, private toastr: ToastrService) {}
+  constructor(private fb: FormBuilder, private apiService: Api_Service, private toastr: ToastrService,private router: Router) {}
 
   ngOnInit(): void {
     this.signUpForm = this.fb.group({
@@ -38,14 +39,19 @@ export class StudentSignUpComponent implements OnInit {
 
   showCamera() {
     this.NextBtnClick.emit("ShowCamera");
+    localStorage.setItem('studentToken', 'true');
+    sessionStorage.setItem('studentToken', 'true');
+    this.router.navigate(['/student-camera']);
   }
 
   showSignIn() {
     this.NextBtnClick.emit("showSignIn");
+    this.router.navigate(['/student-sign-in']);
   }
 
   AdminSignUp() {
     this.NextBtnClick.emit("showAdminSignup");
+    this.router.navigate(['/admin-sign-up']);
   }
 
   handleFileInput(event: any): void {

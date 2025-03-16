@@ -9,10 +9,24 @@
         <button class="add-button" (click)="exportToExcel()">Export to Excel</button>
     </div>
 
+    <div class="filter-group">
+        <label for="classFilter">Filter by Class:</label>
+        <select id="classFilter" [(ngModel)]="selectedClass" (change)="filterByClass()">
+          <option value="">All</option>
+          <option value="FE">F.E</option>
+          <option value="SE">S.E</option>
+          <option value="TE">T.E</option>
+          <option value="BE">B.E</option>
+        </select>
+      </div>
+      
+      
+
     <div *ngIf="studentInfo.length > 0; else noData" class="student-table">
         <table>
             <thead>
                 <tr>
+                    <th>Sr No.</th>
                     <th>Name</th>
                     <th>Roll No</th>
                     <th>Department</th>
@@ -23,17 +37,19 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let student of studentInfo">
-                    <td>{{ student.name }}</td>
-                    <td>{{ student.rollno }}</td> 
-                    <td>{{ student.department }}</td>
-                    <td>{{ student.studentClass || student.class }}</td> 
-                    <td>{{ student.email }}</td>
-                    <td>{{ student.phoneno }}</td> 
-                    <td><button class="edit-button" (click)="editStudent(student)">Edit</button></td>
+                <tr *ngFor="let student of filteredStudents | paginate: { itemsPerPage: 5, currentPage: currentPage }; let i = index">
+                  <td>{{ (currentPage - 1) * 5 + i + 1 }}</td>
+                  <td>{{ student.name }}</td>
+                  <td>{{ student.rollno }}</td> 
+                  <td>{{ student.department }}</td>
+                  <td>{{ student.studentClass || student.class }}</td> 
+                  <td>{{ student.email }}</td>
+                  <td>{{ student.phoneno }}</td> 
+                  <td><button class="edit-button" (click)="editStudent(student)">Edit</button></td>
                 </tr>
-            </tbody>
+              </tbody>
         </table>
+        <pagination-controls style="display: flex; align-items: center; justify-content: flex-end;" (pageChange)="currentPage = $event"></pagination-controls>
     </div>
 
     <ng-template #noData>

@@ -23,6 +23,7 @@
     "@tensorflow/tfjs": "^4.22.0",
     "face-api.js": "^0.22.2",
     "file-saver": "^2.0.5",
+    "ngx-pagination": "^6.0.3",
     "ngx-toastr": "^14.3.0",
     "opencv.js": "^1.2.1",
     "rxjs": "~7.5.0",

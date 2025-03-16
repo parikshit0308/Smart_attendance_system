@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Api_Service } from '../api-services.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-sign-in',
@@ -12,7 +13,7 @@ export class StudentSignInComponent implements OnInit {
   signInForm!: FormGroup;
   @Output() NextBtnClick = new EventEmitter<string>();
 
-  constructor(private fb: FormBuilder, private apiService: Api_Service, private toastr: ToastrService) {}
+  constructor(private fb: FormBuilder, private apiService: Api_Service, private toastr: ToastrService,private router: Router) {}
 
   ngOnInit(): void {
     this.signInForm = this.fb.group({
@@ -50,9 +51,13 @@ export class StudentSignInComponent implements OnInit {
 
   onSignUp(): void {
     this.NextBtnClick.emit("ShowSignUp");
+    this.router.navigate(['/student-sign-up']);
   }
 
   showCamera(): void {
     this.NextBtnClick.emit("ShowCamera");
+    localStorage.setItem('studentToken', 'true');
+    sessionStorage.setItem('studentToken', 'true');
+    this.router.navigate(['/student-camera']);
   }
 }
