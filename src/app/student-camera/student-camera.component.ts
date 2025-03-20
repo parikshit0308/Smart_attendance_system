@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, EventEmitter, Outp
 import * as faceapi from 'face-api.js';
 import { Api_Service } from '../api-services.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-camera',
@@ -19,11 +20,27 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
   studentImages: string[] = [];
   isAttendanceEnabled = false;
 
-  allowedLatitude = 18.5932063;
-  allowedLongitude = 73.9952850;
-  allowedRadius = 100;
+  subjectMapping: any = {
+    FE: ['Physics', 'Chemistry', 'M-1', 'BEE','BXE','M-2','EM'],
+    SE: ['DSA', 'OOPs', 'FDS', 'Math-III'],
+    TE: ['Operating Systems', 'Computer Networks', 'Web Tech'],
+    BE: ['AI/ML', 'Cloud Computing', 'Blockchain']
+  };
+  
+  availableSubjects: string[] = [];
+  selectedSubject: string = '';
 
-  constructor(private apiService: Api_Service, private toastr: ToastrService) {}
+  setSubjectsBasedOnClass(): void {
+    if (this.studentInfo && this.studentInfo.studentClass) {
+      this.availableSubjects = this.subjectMapping[this.studentInfo.studentClass] || [];
+    }
+  }
+
+  allowedLatitude = 18.5771235;
+  allowedLongitude = 73.9771358;
+  allowedRadius = 250;
+
+  constructor(private apiService: Api_Service, private toastr: ToastrService, private router: Router) {}
   @Output() NextBtnClick = new EventEmitter<string>();
 
   async ngOnInit(): Promise<void> {
@@ -31,6 +48,8 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
     if (storedStudentInfo) {
       this.studentInfo = JSON.parse(storedStudentInfo);
     }
+    
+    this.setSubjectsBasedOnClass();
 
     const storedImages = localStorage.getItem('studentImages');
     if (storedImages) {
@@ -185,5 +204,9 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return R * c;
+  }
+
+  showList(){
+    this.router.navigate(['/admin-list'])
   }
 }

@@ -15,6 +15,7 @@ export class AdminListComponent implements OnInit {
   selectedClass: string = '';
   currentPage: number = 1;
   filteredStudents: any[] = [];
+  totalCount: any;
 
   constructor(private apiService: Api_Service, private router: Router) {}
 
@@ -36,7 +37,8 @@ export class AdminListComponent implements OnInit {
         (student: any) => (student.studentClass || student.class) === this.selectedClass
       );
     }
-    this.currentPage = 1; // ✅ Reset to page 1 on filter
+    this.totalCount = this.filteredStudents.length;
+    this.currentPage = 1;
   }
 
   toggleAttendance() {
@@ -50,11 +52,15 @@ export class AdminListComponent implements OnInit {
   }
 
   fetchStudentList(): void {
+    debugger
     this.apiService.getStudentList().subscribe(
       (data) => {
+        debugger
         if (data && data.length > 0) {
           this.studentInfo = data;
           this.filteredStudents = this.studentInfo; 
+          console.log(this.filteredStudents)
+          this.totalCount = this.filteredStudents.length;
           sessionStorage.setItem('studentInfo', JSON.stringify(this.studentInfo));
         } else {
           this.studentInfo = [];
@@ -69,15 +75,29 @@ export class AdminListComponent implements OnInit {
 
 
   exportToExcel(): void {
-    const worksheet = XLSX.utils.json_to_sheet(this.studentInfo); // Convert JSON to worksheet
-    const workbook = XLSX.utils.book_new(); // Create a new workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Students'); // Append sheet
-
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' }); // Generate Excel buffer
-    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' }); // Convert to Blob
-
-    saveAs(blob, 'StudentList.xlsx'); // Save file
+    let studentsToExport = [];
+  
+    if (!this.selectedClass || this.selectedClass === '') {
+      studentsToExport = this.studentInfo;
+    } else {
+      studentsToExport = this.studentInfo.filter(
+        (student: any) => (student.studentClass || student.class) === this.selectedClass
+      );
+    }
+  
+    studentsToExport.sort((a: any, b: any) => Number(a.rollno) - Number(b.rollno));
+  
+    const worksheet = XLSX.utils.json_to_sheet(studentsToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Students');
+  
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  
+    const fileName = this.selectedClass ? `${this.selectedClass}_Students.xlsx` : `All_Students.xlsx`;
+    saveAs(blob, fileName);
   }
+  
 
   @Output() NextBtnClick = new EventEmitter<string>();
 
@@ -86,12 +106,11 @@ export class AdminListComponent implements OnInit {
     this.router.navigate(['/admin-add']);
   }
 
-  showCamera() {
-    this.NextBtnClick.emit("ShowCamera");
-  }
-
-
   editStudent(student: any): void {
     console.log("Edit Student:", student);
+  }
+
+  showCamera(){
+    this.router.navigate(['/student-camera'])
   }
 }
