@@ -12,12 +12,9 @@
     <select id="session" [(ngModel)]="selectedSession">
       <option *ngFor="let session of availableSessions" [value]="session">{{ session }}</option>
     </select>
-    <!-- <button (click)="showList()">emit</button> -->
 
-    <label for="subject">Subject:</label>
-    <select id="subject" [(ngModel)]="selectedSubject" [disabled]="!availableSubjects.length">
-      <option *ngFor="let subject of availableSubjects" [value]="subject">{{ subject }}</option>
-    </select>
+    <label for="session">Session:</label>
+    <div>{{selectedSubjects | json}}</div>
   </div>
 
   <div class="camera-controls">
@@ -25,9 +22,7 @@
     <div class="camera-buttons">
       <button class="start-camera" (click)="startCamera()">Start Camera</button>
       <button class="capture-image" (click)="captureImage()">Capture Image</button>
-      <button 
-      class="mark-attendance" 
-      (click)="compareImages()">
+      <button class="mark-attendance" (click)="compareImages()">
         Mark Attendance
       </button>
     </div>

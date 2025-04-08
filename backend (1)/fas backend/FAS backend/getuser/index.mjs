@@ -1,17 +1,34 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
-// Initialize DynamoDB client
 const dynamoDB = DynamoDBDocumentClient.from(
   new DynamoDBClient({ region: "ap-south-1" })
 );
 
 export const handler = async (event) => {
+  const origin = event.headers?.origin || '';
+  const isLocalhost = origin.startsWith("http://localhost");
+
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": isLocalhost ? origin : "",
+    "Access-Control-Allow-Headers": "Content-Type,Authorization",
+    "Access-Control-Allow-Methods": "POST,OPTIONS",
+    "Access-Control-Allow-Credentials": true,
+  };
+
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: '',
+    };
+  }
+
   try {
-    // Ensure event.body exists and is a valid JSON
     if (!event.body) {
       return {
         statusCode: 400,
+        headers: corsHeaders,
         body: JSON.stringify({ message: "Request body missing" }),
       };
     }
@@ -22,22 +39,21 @@ export const handler = async (event) => {
     } catch (error) {
       return {
         statusCode: 400,
+        headers: corsHeaders,
         body: JSON.stringify({ message: "Invalid JSON format" }),
       };
     }
 
-    // Extract email and password
     const { email, password } = parsedBody;
 
-    // Validate input fields
     if (!email || !password) {
       return {
         statusCode: 400,
+        headers: corsHeaders,
         body: JSON.stringify({ message: "Missing email or password" }),
       };
     }
 
-    // Query DynamoDB
     const params = {
       TableName: "studentTable",
       IndexName: "email-index",
@@ -54,6 +70,7 @@ export const handler = async (event) => {
       if (password === student.password) {
         return {
           statusCode: 200,
+          headers: corsHeaders,
           body: JSON.stringify({
             message: "Student login successful",
             studentId: student.studentId,
@@ -67,18 +84,21 @@ export const handler = async (event) => {
       } else {
         return {
           statusCode: 401,
+          headers: corsHeaders,
           body: JSON.stringify({ message: "Invalid password" }),
         };
       }
     } else {
       return {
         statusCode: 404,
+        headers: corsHeaders,
         body: JSON.stringify({ message: "Student not found" }),
       };
     }
   } catch (error) {
     return {
       statusCode: 500,
+      headers: corsHeaders,
       body: JSON.stringify({ error: "Internal Server Error", details: error.message }),
     };
   }

@@ -29,7 +29,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     StudentSignUpComponent,
     StudentSignInComponent,
     AdminSignUpComponent,
-    AdminSignInComponent
+    AdminSignInComponent,
   ],
   imports: [
     BrowserModule,

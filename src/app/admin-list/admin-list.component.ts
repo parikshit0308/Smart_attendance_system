@@ -17,6 +17,16 @@ export class AdminListComponent implements OnInit {
   filteredStudents: any[] = [];
   totalCount: any;
 
+  selectedSubjects: { [key: string]: string } = {}; // To store selected subjects
+
+  subjectsByClass: any = {
+    "F.E": ["M-1", "Physics", "Chemistry", "EG", "BXE", "BEE", "EM", "M-2"],
+    "S.E": ["OOPS", "FDS", "DSA", "M-3", "CG", "DM", "DELD", "SE"],
+    "T.E": ["IOT", "CNS", "SPOS", "A.I", "DSBDA", "TOC", "DBMS", "C.C"],
+    "B.E": ["HPC", "M.L", "B.I", "NLP", "CSDF", "S.T", "D.L"]
+  }; 
+  subject: any;
+
   constructor(private apiService: Api_Service, private router: Router) {}
 
   ngOnInit(): void {
@@ -24,9 +34,10 @@ export class AdminListComponent implements OnInit {
       this.fetchStudentList();
     }, 100);
 
-    this.apiService.attendanceStatus$.subscribe(status => {
-      this.isAttendanceActive = status;
-    });
+    // const storedData = sessionStorage.getItem('selectedSubjects');
+    // if (storedData) {
+    //   this.selectedSubjects = JSON.parse(storedData);
+    // }
   }
 
   filterByClass(): void {
@@ -41,15 +52,35 @@ export class AdminListComponent implements OnInit {
     this.currentPage = 1;
   }
 
-  toggleAttendance() {
-    if (this.isAttendanceActive) {
-      this.apiService.stopAttendance();
-      console.log("status",this.isAttendanceActive);
-    } else {
-      this.apiService.startAttendance();
-      console.log("status",this.isAttendanceActive);
-    }
+  onSubjectChange(className: string, selectedValue: string) {
+    this.selectedSubjects[className] = selectedValue;
+    sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
+    this.subject = selectedValue;
+    console.log(`✅ Stored: ${className} -> ${selectedValue}`);
   }
+  
+  resetSelection() {
+    this.selectedSubjects = {}; // Clear ngModel
+    sessionStorage.removeItem('selectedSubjects'); // Clear sessionStorage
+    console.log("🔄 All selections reset.");
+  }
+
+  toggleAttendance() {
+    const action = this.isAttendanceActive ? 'stop' : 'start';
+    const request = action === 'start' ? this.apiService.startAttendance() : this.apiService.stopAttendance();
+    
+    request.subscribe({
+      next: () => {
+        this.isAttendanceActive = !this.isAttendanceActive;
+        this.apiService.setAttendanceStatus(this.isAttendanceActive); // ✅ Update global status
+        console.log(`✅ Attendance ${action}ed successfully`);
+
+        // this.showCamera();
+      },
+      error: (error) => console.error(`❌ Error while ${action}ing attendance:`, error)
+    });
+  }
+
 
   fetchStudentList(): void {
     debugger
@@ -61,7 +92,7 @@ export class AdminListComponent implements OnInit {
           this.filteredStudents = this.studentInfo; 
           console.log(this.filteredStudents)
           this.totalCount = this.filteredStudents.length;
-          sessionStorage.setItem('studentInfo', JSON.stringify(this.studentInfo));
+          // sessionStorage.setItem('studentInfo', JSON.stringify(this.studentInfo));
         } else {
           this.studentInfo = [];
           this.filteredStudents = [];
@@ -112,5 +143,6 @@ export class AdminListComponent implements OnInit {
 
   showCamera(){
     this.router.navigate(['/student-camera'])
+    // this.NextBtnClick.emit("ShowCamera");
   }
 }

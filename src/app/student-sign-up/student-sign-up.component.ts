@@ -75,14 +75,13 @@ export class StudentSignUpComponent implements OnInit {
     localStorage.setItem('studentImages', JSON.stringify(this.uploadedImages));
   }
 
+  studentId: any;
   onSubmit(): void {
     debugger
     if (this.signUpForm.invalid || this.uploadedImages.length === 0) {
       this.toastr.error('Please fill all required fields and upload at least one image','Warning')
       return;
     }
-
-
     // Keeping your localStorage/sessionStorage logic as it is
     const studentInfo = this.signUpForm.value;
     sessionStorage.setItem('studentInfo', JSON.stringify(studentInfo));
@@ -91,17 +90,26 @@ export class StudentSignUpComponent implements OnInit {
 
     // Creating the object with backend's expected format
     const requestBody = {
-      class: studentInfo.studentClass, // Change key from studentClass -> class
+      class: studentInfo.studentClass,
       department: studentInfo.studentDepartment,
       email: studentInfo.studentEmail,
       name: studentInfo.studentName,
       password: studentInfo.studentPassword,
       phoneno: studentInfo.studentPhone,
-      rollno: studentInfo.studentRollNo
+      rollno: studentInfo.studentRollNo,
+      images: this.uploadedImages.map(image => image.split(',')[1]) // Extract only base64 string
     };
+
+    console.log(requestBody)
 
     this.apiService.signUp(requestBody).subscribe({
       next: (response) => {
+        debugger
+        console.log(response)
+        if(response.studentId){
+          this.studentId = response.studentId
+          sessionStorage.setItem("StudentID",this.studentId)
+        }
         this.toastr.success('Student Sign-Up Successful!','Success')
         console.log(response);
         this.showCamera();
