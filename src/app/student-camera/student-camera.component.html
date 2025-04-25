@@ -1,9 +1,9 @@
 <div class="camera-container">
   <div class="student-info">
     <h3>Student Information</h3>
-    <p><strong>Name:</strong> {{ studentInfo?.studentName }}</p>
-    <p><strong>Roll No:</strong> {{ studentInfo.studentRollNo }}</p>
-    <p><strong>Department:</strong> {{ studentInfo.studentDepartment }}</p>
+    <p><strong>Name:</strong> {{ studentInfo?.studentName || studentInfo?.name }}</p>
+    <p><strong>Roll No:</strong> {{ studentInfo.studentRollNo || studentInfo?.rollno }}</p>
+    <p><strong>Department:</strong> {{ studentInfo.studentDepartment || studentInfo?.department }}</p>
     <p><strong>Year:</strong> {{ studentInfo.studentClass }}</p>
   </div>
 

@@ -1,1 +1,33 @@
-<p>admin-view works!</p>
+<div class="student-details">
+    <h2>Student Attendance</h2>
+    <p><strong>Name:</strong> {{ name }}</p>
+    <p><strong>Roll No:</strong> {{ roll }}</p>
+  </div>
+  
+  <div class="attendance-table">
+    <h3>Subject-wise Attendance</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th *ngFor="let date of uniqueDates">{{ date }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let subject of subjects">
+          <td>{{ subject }}</td>
+          <td *ngFor="let date of uniqueDates">
+            {{ getAttendanceForSubject(subject, date) || 0 }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button (click)="generateExcel()">Generate Excel</button>
+  <button style="margin-left: 10px;" (click)="close()">Back</button>
+
+<!-- Total Attendance Display -->
+<div class="total-attendance">
+  <h3>Total Attendance: {{ totalAttendance }}%</h3>
+</div>

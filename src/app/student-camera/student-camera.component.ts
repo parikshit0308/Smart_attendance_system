@@ -23,10 +23,9 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
   selectedSubjects: any
   studentId: any;
   availableSubjects: string[] = [];
-  selectedSubject: string = '';
 
-  allowedLatitude = 18.5401344
-  allowedLongitude = 73.8295808;
+  allowedLatitude = 18.5761792;
+  allowedLongitude = 73.8689024;
   allowedRadius = 500;
   capturedFaceDescriptor: any;
 
@@ -40,14 +39,16 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
       console.log("----------------->",this.studentInfo)
     }
 
+    const storedStudentInfoForLogin = sessionStorage.getItem('studentInfoForLogin');
+    if (storedStudentInfoForLogin) {
+      this.studentInfo = JSON.parse(sessionStorage.getItem('studentInfoForLogin') || '{}');
+      console.log("----------------->",this.studentInfo)
+    }
+
     // sessionStorage.clear();
 
-    const storedSubjects = sessionStorage.getItem('selectedSubjects');
-    if (storedSubjects) {
-      this.selectedSubjects = JSON.parse(sessionStorage.getItem('selectedSubjects') || '{}');
-      console.log("subjects",this.selectedSubjects)
-    }
-    
+    this.selectedSubjects = sessionStorage.getItem('selectedSubject');
+
     const storedImages = localStorage.getItem('studentImages');
     if (storedImages) {
       this.studentImages = JSON.parse(storedImages);
@@ -57,11 +58,6 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
       this.isAttendanceActive = status; // ✅ Updates button visibility dynamically
       console.log("Status",this.isAttendanceActive);
     });
-
-    const storedData = sessionStorage.getItem('selectedSubjects');
-    if (storedData) {
-      this.selectedSubjects = JSON.parse(storedData);
-    }
 
     this.studentId = sessionStorage.getItem("StudentID");
 
@@ -211,13 +207,13 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
         matchFound = true;
   
         const attendanceData = {
-          studentId: this.studentId,
+          studentId: this.studentId || this.studentInfo?.studentId,
           session: this.selectedSession,
           Attendance_status: true,
           date: new Date().toISOString().split('T')[0],
-          rollno: this.studentInfo?.studentRollNo,
-          studentname: this.studentInfo?.studentName,
-          subject: this.selectedSubjects?.[this.studentInfo?.studentClass] || 'N/A'
+          rollno: this.studentInfo?.studentRollNo || this.studentInfo?.rollno,
+          studentname: this.studentInfo?.studentName || this.studentInfo?.name,
+          subject: this.selectedSubjects
         };
   
         console.log("Sending Attendance Data:", attendanceData);
@@ -254,10 +250,24 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
   }
 
   async getFaceDescriptor(image: HTMLImageElement): Promise<Float32Array | null> {
-    debugger
-    const detections = await faceapi.detectSingleFace(image, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
-    return detections ? detections.descriptor : null;
+    const detections = await faceapi
+      .detectAllFaces(image, new faceapi.TinyFaceDetectorOptions())
+      .withFaceLandmarks()
+      .withFaceDescriptors();
+  
+    if (detections.length === 0) {
+      return null;
+    }
+  
+    if (detections.length > 1) {
+      this.capturedImage = null
+      this.toastr.warning("Multiple faces detected! Please ensure only one person is visible.", "Warning");
+      return null;
+    }
+  
+    return detections[0].descriptor;
   }
+  
  private async isWithinAllowedLocation(): Promise<boolean> {
     return new Promise((resolve) => {
       if (!navigator.geolocation) {

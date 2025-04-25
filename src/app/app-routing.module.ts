@@ -8,6 +8,7 @@ import { AdminSignUpComponent } from './admin-sign-up/admin-sign-up.component';
 import { AdminListComponent } from './admin-list/admin-list.component';
 import { AdminAddComponent } from './admin-add/admin-add.component';
 import { StudentAuthGuard } from './auth/student-auth.guard';
+import { AdminViewComponent } from './admin-view/admin-view.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'student-sign-in', pathMatch: 'full' },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'admin-sign-up', component: AdminSignUpComponent },
   { path: 'admin-list', component: AdminListComponent },
   { path: 'admin-add', component: AdminAddComponent },
+  { path: 'admin-view', component: AdminViewComponent},
 ];
 
 @NgModule({

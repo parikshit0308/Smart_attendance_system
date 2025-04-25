@@ -18,24 +18,59 @@
     </div>
 
     <div class="filter-group">
+      <div class="filter-group">
         <div class="flexer">
-            <label for="classFilter">Filter by Class:</label>
-            <select class=" " id="classFilter" [(ngModel)]="selectedClass" (change)="filterByClass()">
-              <option value="">All</option>
-              <option value="FE">F.E</option>
-              <option value="SE">S.E</option>
-              <option value="TE">T.E</option>
-              <option value="BE">B.E</option>
-            </select>
+          <label for="classFilter">Filter by Class:</label>
+          <select class="" id="classFilter" [(ngModel)]="selectedClass" (change)="filterByClass()">
+            <option value="">All</option>
+            <option value="FE">F.E</option>
+            <option value="SE">S.E</option>
+            <option value="TE">T.E</option>
+            <option value="BE">B.E</option>
+          </select>
         </div>
-        <div *ngFor="let className of ['F.E', 'S.E', 'T.E', 'B.E']" class="flexer">
-            <label [for]="className">{{ className }}</label>
-            <select class="class-selection" [(ngModel)]="selectedSubjects[className]" (change)="onSubjectChange(className, selectedSubjects[className])">
-              <option *ngFor="let subject of subjectsByClass[className]" [value]="subject">
-                {{ subject }}
-              </option>
-            </select>
-          </div>
+      
+        <!-- F.E Class Subject Dropdown -->
+        <div class="flexer">
+          <label for="FE">F.E</label>
+          <select class="class-selection" [(ngModel)]="selectedSubject" (change)="onSubjectChange(selectedSubject)">
+            <option *ngFor="let subject of subjectsByClass['F.E']" [value]="subject">
+              {{ subject }}
+            </option>
+          </select>
+        </div>
+      
+        <!-- S.E Class Subject Dropdown -->
+        <div class="flexer" >
+          <label for="SE">S.E</label>
+          <select class="class-selection" [(ngModel)]="selectedSubject" (change)="onSubjectChange(selectedSubject)">
+            <option *ngFor="let subject of subjectsByClass['S.E']" [value]="subject">
+              {{ subject }}
+            </option>
+          </select>
+        </div>
+      
+        <!-- T.E Class Subject Dropdown -->
+        <div class="flexer">
+          <label for="TE">T.E</label>
+          <select class="class-selection" [(ngModel)]="selectedSubject" (change)="onSubjectChange(selectedSubject)">
+            <option *ngFor="let subject of subjectsByClass['T.E']" [value]="subject">
+              {{ subject }}
+            </option>
+          </select>
+        </div>
+      
+        <!-- B.E Class Subject Dropdown -->
+        <div class="flexer">
+          <label for="BE">B.E</label>
+          <select class="class-selection" [(ngModel)]="selectedSubject" (change)="onSubjectChange(selectedSubject)">
+            <option *ngFor="let subject of subjectsByClass['B.E']" [value]="subject">
+              {{ subject }}
+            </option>
+          </select>
+        </div>
+      </div>
+      
           
           <button (click)="resetSelection()">Reset</button>
 
@@ -67,6 +102,7 @@
                   <td>{{ student.email }}</td>
                   <td>{{ student.phoneno }}</td> 
                   <td><button class="edit-button" (click)="editStudent(student)">Edit</button></td>
+                  <td><button class="edit-button" (click)="showView(student.name,student.rollno,student.studentId)">View</button></td>
                 </tr>
               </tbody>
         </table>

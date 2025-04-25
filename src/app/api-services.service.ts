@@ -17,6 +17,7 @@ export class Api_Service {
   private starttAttendance = 'https://37404yao55.execute-api.ap-south-1.amazonaws.com/stage/startAttendance';
   private stoppAttendance = 'https://37404yao55.execute-api.ap-south-1.amazonaws.com/stage/stopAttendance';
   private MarkAttendance = 'https://37404yao55.execute-api.ap-south-1.amazonaws.com/stage/mark-attendance';
+  private getAttendance = 'https://37404yao55.execute-api.ap-south-1.amazonaws.com/stage/mark-attendance'
 
   constructor(private http: HttpClient) {}
 
@@ -60,6 +61,11 @@ export class Api_Service {
     return this.http.post(`${this.stoppAttendance}`, { action: 'stop' }).pipe(
       tap(() => this.attendanceStatus.next(false)) 
     );
+  }
+
+  getAttendanceForAdmin(id: any): Observable<any> {
+    const url = `${this.getAttendance}?studentId=${id}`;
+    return this.http.get(url);
   }
   
   private attendanceStatus = new BehaviorSubject<boolean>(false); 

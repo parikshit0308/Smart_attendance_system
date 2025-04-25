@@ -68,5 +68,13 @@ export class AppComponent {
       this.adminSignUp = false;
       this.adminSignin = false;
     }
+
+    if(event == "showView"){
+      this.adminAdd = false;
+      this.adminView = true;
+      this.adminList = false;
+      this.adminSignUp = false;
+      this.adminSignin = false;
+    }
   }
 }

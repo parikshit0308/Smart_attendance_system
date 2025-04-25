@@ -17,7 +17,7 @@ export class AdminListComponent implements OnInit {
   filteredStudents: any[] = [];
   totalCount: any;
 
-  selectedSubjects: { [key: string]: string } = {}; // To store selected subjects
+  selectedSubject: any // To store selected subjects
 
   subjectsByClass: any = {
     "F.E": ["M-1", "Physics", "Chemistry", "EG", "BXE", "BEE", "EM", "M-2"],
@@ -52,15 +52,13 @@ export class AdminListComponent implements OnInit {
     this.currentPage = 1;
   }
 
-  onSubjectChange(className: string, selectedValue: string) {
-    this.selectedSubjects[className] = selectedValue;
-    sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
-    this.subject = selectedValue;
-    console.log(`✅ Stored: ${className} -> ${selectedValue}`);
+  onSubjectChange(subject: string) {
+    sessionStorage.setItem('selectedSubject', subject);
+    console.log(`✅ Subject stored: ${subject}`);
   }
   
   resetSelection() {
-    this.selectedSubjects = {}; // Clear ngModel
+    this.selectedSubject = ''; // Clear ngModel
     sessionStorage.removeItem('selectedSubjects'); // Clear sessionStorage
     console.log("🔄 All selections reset.");
   }
@@ -104,7 +102,6 @@ export class AdminListComponent implements OnInit {
     );
   }
 
-
   exportToExcel(): void {
     let studentsToExport = [];
   
@@ -135,6 +132,15 @@ export class AdminListComponent implements OnInit {
   showAdd() {
     this.NextBtnClick.emit("showAdd");
     this.router.navigate(['/admin-add']);
+  }
+
+  showView(name:any, roll:any ,id:any){
+    debugger
+    const storeId = sessionStorage.setItem("studentIdForview",id)
+    const storeName = sessionStorage.setItem("studentNameForview",name)
+    const storeroll = sessionStorage.setItem("studentRollForview",roll)
+    this.NextBtnClick.emit("showView");
+    this.router.navigate(['/admin-view']);
   }
 
   editStudent(student: any): void {

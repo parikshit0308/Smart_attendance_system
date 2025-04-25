@@ -33,10 +33,21 @@ export class StudentSignInComponent implements OnInit {
       email: this.signInForm.value.studentEmail,
       password: this.signInForm.value.studentPassword
     };
-
+    console.log("Login details",requestBody)
     this.apiService.signIn(requestBody).subscribe({
       next: (response) => {
+        debugger
+        console.log("Login details",response)
         this.toastr.success('Successfully logged in!','Success')
+        sessionStorage.removeItem("studentInfo")
+        localStorage.removeItem("studentInfo")
+        sessionStorage.setItem('studentInfoForLogin', JSON.stringify({
+          name: response.name,
+          rollno: response.rollno,
+          studentClass: response.studentClass,
+          department: response.department,
+          studentId: response.studentId
+        }));
         this.showCamera();
       },
       error: (error) => {
