@@ -22,7 +22,7 @@
     <div class="camera-buttons">
       <button class="start-camera" (click)="startCamera()">Start Camera</button>
       <button class="capture-image" (click)="captureImage()">Capture Image</button>
-      <button class="mark-attendance" (click)="compareImages()">
+      <button class="mark-attendance" *ngIf="isStart" (click)="compareImages()">
         Mark Attendance
       </button>
     </div>

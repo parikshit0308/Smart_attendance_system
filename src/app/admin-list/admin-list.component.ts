@@ -30,6 +30,7 @@ export class AdminListComponent implements OnInit {
   constructor(private apiService: Api_Service, private router: Router) {}
 
   ngOnInit(): void {
+    debugger
     setTimeout(() => {
       this.fetchStudentList();
     }, 100);

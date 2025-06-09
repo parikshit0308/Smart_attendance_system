@@ -33,6 +33,8 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
   @Output() NextBtnClick = new EventEmitter<string>();
 
   async ngOnInit(): Promise<void> {
+    this.getStatusForAttendance();
+
     const storedStudentInfo = localStorage.getItem('studentInfo');
     if (storedStudentInfo) {
       this.studentInfo = JSON.parse(localStorage.getItem('studentInfo') || '{}');
@@ -62,6 +64,27 @@ export class StudentCameraComponent implements OnInit, OnDestroy {
     this.studentId = sessionStorage.getItem("StudentID");
 
     await this.loadFaceApiModels();
+  }
+
+  isStart: boolean = false
+  getStatusForAttendance(){
+    debugger
+    this.apiService.getAttendanceStatusforMark().subscribe({
+      next: (response) => {
+        debugger
+        if(response.isAttendanceActive === true){
+          console.log("Status Response",response)
+          this.isStart = true
+        }
+        else if(response.isAttendanceActive === false){
+          console.log("Status Response",response)
+          this.isStart = false
+        }
+      },
+      error: (err) => {
+        this.toastr.error("Error Getting Attendance Status","Error")
+      }
+    })
   }
 
   stringifySubjects(obj: any): string {
